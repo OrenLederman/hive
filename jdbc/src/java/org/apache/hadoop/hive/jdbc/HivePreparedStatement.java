@@ -648,8 +648,30 @@ public class HivePreparedStatement implements PreparedStatement {
    */
 
   public void setObject(int parameterIndex, Object x) throws SQLException {
-    // TODO Auto-generated method stub
-    throw new SQLException("Method not supported");
+    if (x instanceof String) {
+      setString(parameterIndex, (String) x);
+    } else if (x instanceof BigDecimal) {
+      setBigDecimal(parameterIndex, (BigDecimal) x);
+    } else if (x instanceof Short) {
+      setShort(parameterIndex, ((Short) x).shortValue());
+    } else if (x instanceof Integer) {
+      setInt(parameterIndex, ((Integer) x).intValue());
+    } else if (x instanceof Long) {
+      setLong(parameterIndex, ((Long) x).longValue());
+    } else if (x instanceof Float) {
+      setFloat(parameterIndex, ((Float) x).floatValue());
+    } else if (x instanceof Double) {
+      setDouble(parameterIndex, ((Double) x).doubleValue());
+    } else if (x instanceof Boolean) {
+      setBoolean(parameterIndex, ((Boolean) x).booleanValue());
+    } else if (x instanceof Byte) {
+      setByte(parameterIndex, ((Byte) x).byteValue());
+    } else if (x instanceof Character) {
+      setString(parameterIndex, ((Character) x).toString());
+    } else {
+      // Can't infer a type.
+      throw new SQLException("Can''t infer the SQL type");
+    }
   }
 
   /*
