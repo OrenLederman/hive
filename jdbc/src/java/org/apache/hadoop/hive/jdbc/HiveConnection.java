@@ -57,6 +57,7 @@ public class HiveConnection implements java.sql.Connection {
   private SQLWarning warningChain = null;
 
   private static final String URI_PREFIX = "jdbc:hive://";
+  private static final String DEFAULT_DATABASE = "default";
 
   /**
    * TODO: - parse uri (use java.net.URI?).
@@ -66,6 +67,8 @@ public class HiveConnection implements java.sql.Connection {
       throw new SQLException("Invalid URL: " + uri, "08S01");
     }
 
+    String database = DEFAULT_DATABASE;
+    
     // remove prefix
     uri = uri.substring(URI_PREFIX.length());
 
@@ -79,7 +82,7 @@ public class HiveConnection implements java.sql.Connection {
       }
     } else {
       // parse uri
-      // form: hostname:port/databasename
+      // form: hostname:port/databasename?properties
       String[] parts = uri.split("/");
       String[] hostport = parts[0].split(":");
       int port = 10000;
@@ -97,9 +100,19 @@ public class HiveConnection implements java.sql.Connection {
         throw new SQLException("Could not establish connecton to "
             + uri + ": " + e.getMessage(), "08S01");
       }
+      
+      if (parts.length > 1) {
+    	String[] databaseAndProperties = parts[1].split("\\?");
+        database = databaseAndProperties[0];
+        if (database.isEmpty()){
+    	  database = DEFAULT_DATABASE;
+        }
+      }
     }
+    
     isClosed = false;
     configureConnection();
+    setCatalog(database);
   }
 
   private void configureConnection() throws SQLException {
@@ -544,8 +557,9 @@ public class HiveConnection implements java.sql.Connection {
    */
 
   public void setCatalog(String catalog) throws SQLException {
-    // TODO Auto-generated method stub
-    throw new SQLException("Method not supported");
+	Statement stmt = createStatement();
+	stmt.execute("use "+catalog);
+	stmt.close();
   }
 
   /*
