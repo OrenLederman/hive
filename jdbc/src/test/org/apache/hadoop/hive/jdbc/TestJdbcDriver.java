@@ -206,17 +206,17 @@ public class TestJdbcDriver extends TestCase {
     try {
       PreparedStatement ps = con.prepareStatement(sql);
 
-      ps.setBoolean(1, true);
-      ps.setBoolean(2, true);
+      ps.setObject(1, true);
+      ps.setObject(2, true);
 
-      ps.setShort(3, Short.valueOf("1"));
-      ps.setInt(4, 2);
-      ps.setFloat(5, 3f);
-      ps.setDouble(6, Double.valueOf(4));
-      ps.setString(7, "test'string\"");
-      ps.setLong(8, 5L);
-      ps.setByte(9, (byte) 1);
-      ps.setByte(10, (byte) 1);
+      ps.setObject(3, Short.valueOf("1"));
+      ps.setObject(4, 2);
+      ps.setObject(5, 3f);
+      ps.setObject(6, Double.valueOf(4));
+      ps.setObject(7, "test'string\"");
+      ps.setObject(8, 5L);
+      ps.setObject(9, (byte) 1);
+      ps.setObject(10, (byte) 1);
 
       ps.setMaxRows(2);
 
