@@ -18,13 +18,6 @@
 
 package org.apache.hadoop.hive.jdbc;
 
-import org.apache.hadoop.hive.metastore.TableType;
-import org.apache.hadoop.hive.metastore.api.FieldSchema;
-import org.apache.hadoop.hive.metastore.api.Table;
-import org.apache.hadoop.hive.service.HiveInterface;
-
-import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -36,7 +29,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.jar.Attributes;
-import java.util.jar.Manifest;
+
+import org.apache.hadoop.hive.metastore.TableType;
+import org.apache.hadoop.hive.metastore.api.FieldSchema;
+import org.apache.hadoop.hive.metastore.api.Table;
+import org.apache.hadoop.hive.service.HiveInterface;
+import org.apache.thrift.TException;
 
 /**
  * HiveDatabaseMetaData.
@@ -273,7 +271,11 @@ public class HiveDatabaseMetaData implements java.sql.DatabaseMetaData {
   }
 
   public String getDatabaseProductVersion() throws SQLException {
-    return "0";
+    try {
+      return client.getVersion();
+    } catch (TException e) {
+      throw new SQLException(e);
+    }
   }
 
   public int getDefaultTransactionIsolation() throws SQLException {

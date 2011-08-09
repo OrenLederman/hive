@@ -32,6 +32,8 @@ import org.apache.hadoop.hive.service.HiveServerException;
  */
 public class HiveStatement implements java.sql.Statement {
   private HiveInterface client;
+  private int fetchSize = 50;
+
   /**
    * We need to keep a reference to the result set to support the following:
    * <code>
@@ -55,7 +57,7 @@ public class HiveStatement implements java.sql.Statement {
    * Keep state so we can fail certain calls made after close().
    */
   private boolean isClosed = false;
-  
+
   /**
    * keep the current ResultRet update count
    */
@@ -70,7 +72,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#addBatch(java.lang.String)
    */
 
@@ -80,7 +82,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#cancel()
    */
 
@@ -90,7 +92,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#clearBatch()
    */
 
@@ -100,7 +102,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#clearWarnings()
    */
 
@@ -110,7 +112,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#close()
    */
 
@@ -122,7 +124,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#execute(java.lang.String)
    */
 
@@ -136,7 +138,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#execute(java.lang.String, int)
    */
 
@@ -146,7 +148,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#execute(java.lang.String, int[])
    */
 
@@ -156,7 +158,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#execute(java.lang.String, java.lang.String[])
    */
 
@@ -166,7 +168,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#executeBatch()
    */
 
@@ -176,7 +178,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#executeQuery(java.lang.String)
    */
 
@@ -194,12 +196,13 @@ public class HiveStatement implements java.sql.Statement {
       throw new SQLException(ex.toString(), "08S01");
     }
     resultSet = new HiveQueryResultSet(client, maxRows);
+    resultSet.setFetchSize(fetchSize);
     return resultSet;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#executeUpdate(java.lang.String)
    */
 
@@ -214,7 +217,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#executeUpdate(java.lang.String, int)
    */
 
@@ -224,7 +227,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#executeUpdate(java.lang.String, int[])
    */
 
@@ -234,7 +237,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#executeUpdate(java.lang.String, java.lang.String[])
    */
 
@@ -244,7 +247,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getConnection()
    */
 
@@ -254,7 +257,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getFetchDirection()
    */
 
@@ -264,17 +267,17 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getFetchSize()
    */
 
   public int getFetchSize() throws SQLException {
-    throw new SQLException("Method not supported");
+    return fetchSize;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getGeneratedKeys()
    */
 
@@ -284,7 +287,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getMaxFieldSize()
    */
 
@@ -294,7 +297,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getMaxRows()
    */
 
@@ -304,7 +307,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getMoreResults()
    */
 
@@ -314,7 +317,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getMoreResults(int)
    */
 
@@ -324,7 +327,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getQueryTimeout()
    */
 
@@ -334,7 +337,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getResultSet()
    */
 
@@ -344,7 +347,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getResultSetConcurrency()
    */
 
@@ -354,7 +357,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getResultSetHoldability()
    */
 
@@ -364,7 +367,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getResultSetType()
    */
 
@@ -374,7 +377,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getUpdateCount()
    */
 
@@ -384,7 +387,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#getWarnings()
    */
 
@@ -394,7 +397,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#isClosed()
    */
 
@@ -404,7 +407,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#isPoolable()
    */
 
@@ -414,7 +417,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#setCursorName(java.lang.String)
    */
 
@@ -424,7 +427,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#setEscapeProcessing(boolean)
    */
 
@@ -434,7 +437,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#setFetchDirection(int)
    */
 
@@ -444,17 +447,17 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#setFetchSize(int)
    */
 
   public void setFetchSize(int rows) throws SQLException {
-    throw new SQLException("Method not supported");
+    fetchSize = rows;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#setMaxFieldSize(int)
    */
 
@@ -464,7 +467,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#setMaxRows(int)
    */
 
@@ -477,7 +480,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#setPoolable(boolean)
    */
 
@@ -487,7 +490,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Statement#setQueryTimeout(int)
    */
 
@@ -497,7 +500,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
    */
 
@@ -507,7 +510,7 @@ public class HiveStatement implements java.sql.Statement {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.sql.Wrapper#unwrap(java.lang.Class)
    */
 
